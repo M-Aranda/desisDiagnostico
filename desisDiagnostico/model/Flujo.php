@@ -85,8 +85,22 @@ class Flujo {
         }
     }
 
-}
+    public function verificarDuplicados($rut) {
+        $sql = "SELECT COUNT(id) AS 'cantidad' FROM voto WHERE rut='$rut';";
+        $ej = $this->conn->Consultar($sql);
+        $rowcount = mysqli_num_rows($ej);
+        $retorno = array();
+        if ($rowcount > 0) {
+            while ($r = mysqli_fetch_assoc($ej)) {
+                array_push($retorno, $r);
+            }
+            return json_encode($retorno);
+        } else {
+            return json_encode(array());
+        }
+    }
 
+}
 
 //para pruebas
 //
@@ -95,6 +109,4 @@ class Flujo {
 //echo $f->listarRegiones();
 //echo $f->listarComunasDeRegion(1);
 //echo $f->listarCandidatos();
-
-
 ?>

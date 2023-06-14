@@ -1,10 +1,8 @@
 <?php
 
-
 $_SESSION['timestamp'] = time();
 //include '..model/Conexion.php';
 include '../model/Flujo.php';
-
 
 if (isset($_POST)) {
     $accion = filter_input(INPUT_POST, "Accion");
@@ -35,6 +33,11 @@ if (isset($_POST)) {
         $idRegion = $region = filter_input(INPUT_POST, "id_region");
         listarComunas($idRegion);
     }
+
+    if ($accion == "verificarDuplicados") {
+        $rut = filter_input(INPUT_POST, "rut");
+        verificarDuplicados($rut);
+    }
 }
 
 function registrar($nombreYApellido, $alias, $rut, $email, $region, $comuna, $candidato, $chkWeb, $chkTV, $chkRS, $chkAmigo) {
@@ -51,7 +54,6 @@ function listarRegiones() {
 
     echo $json;
     $f = null;
-    
 }
 
 function listarCandidatos() {
@@ -71,5 +73,12 @@ function listarComunas($idRegion) {
 }
 
 
+function verificarDuplicados($rut) {
+    $f = new Flujo();
+    $json = $f->verificarDuplicados($rut);
+
+    echo $json;
+    $f = null;
+}
 
 ?>

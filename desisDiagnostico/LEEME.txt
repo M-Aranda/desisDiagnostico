@@ -1,0 +1,4 @@
+Versión de PHP es 8.0
+Versión de MySQL es 8.0
+Software utilizado para correr servidor es XAMPP (se usa APACHE)
+
