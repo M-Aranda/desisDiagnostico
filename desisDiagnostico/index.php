@@ -195,18 +195,22 @@
             }
 
 
-            if (!verificarDuplicados(rut)) {
-                validezRutVotoDuplicado = false;
-                console.log('Rut vota por primera vez');
-            } else {
+            if (verificarDuplicados(rut)) {
                 console.log("Rut ya voto");
+                validezRutVotoDuplicado = false;
+
+            } else {
+                console.log('Rut vota por primera vez');
             }
 
-            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN) {
-                alert("Asegurese de completar el formulario adecuadamente");
-                if (validezRutVotoDuplicado) {
-                    alert("Rut ingresado ya voto");
+            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || !validezRutVotoDuplicado) {
+
+                if (!validezRutVotoDuplicado) {
+                    alert("este rut ya voto");
+                } else {
+                    alert("Asegurese de completar el formulario adecuadamente");
                 }
+
 
             } else {
                 //verificacion exitosa
@@ -444,12 +448,13 @@
                 beforeSend: function () {
                 },
                 success: function (data) {
-                    var cantidad = data[0].cantidad;
-                    if (cantidad === 0) {
+                    var cant = Number(data[0].cantidad);
+
+                    if (cant === 0) {
                         rutNoVoto = false;
                         console.log('Primera vez votando');
                     } else {
-                        console.log('NO es la  primera vez que vota');
+                        console.log('Ya voto');
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
