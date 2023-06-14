@@ -195,8 +195,8 @@
 
 
             console.log("hay " + verificarDuplicados() + " coincidencias");
-
-            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || !validezRut || verificarDuplicados() === 1) {
+//!validezRut ||
+            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || verificarDuplicados() === 1) {
 
                 if (verificarDuplicados() === 1) {
                     alert("este rut ya voto");
