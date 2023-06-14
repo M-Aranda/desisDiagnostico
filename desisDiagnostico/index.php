@@ -126,7 +126,6 @@
             var validezRut = true;
             var validezEmail = true;
             var validezCSEN = true;
-            var validezRutVotoDuplicado = true;
 
             var webChequeado = $('#chkWeb').is(':checked');
             var tvChequeado = $('#chkTV').is(':checked');
@@ -195,25 +194,22 @@
             }
 
 
-            if (verificarDuplicados(rut)) {
-                console.log("Rut ya voto");
-                validezRutVotoDuplicado = false;
+            console.log("hay " + verificarDuplicados() + " coincidencias");
 
-            } else {
-                console.log('Rut vota por primera vez');
-            }
+            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || !validezRut || verificarDuplicados() === 1) {
 
-            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || !validezRutVotoDuplicado) {
-
-                if (!validezRutVotoDuplicado) {
+                if (verificarDuplicados() === 1) {
                     alert("este rut ya voto");
                 } else {
                     alert("Asegurese de completar el formulario adecuadamente");
                 }
+                if (!validezRut) {
+                    alert("el rut no es valido");
+                }
 
 
             } else {
-                //verificacion exitosa
+
 
                 $.ajax({
                     url: 'controller/manejarFlujo.php',
@@ -355,10 +351,10 @@
 
 
         function validarRut(rut) {
-
             rut = rut.replace(/[^\dKk]/g, '').toUpperCase();
 
             if (!/^\d{1,2}\.\d{3}\.\d{3}[-][0-9Kk]{1}$/.test(rut)) {
+                console.log(rut + " está entrando aquí");
                 return false;
             }
 
@@ -371,20 +367,30 @@
                 sum += parseInt(digits[i], 10) * multiplier;
                 multiplier = (multiplier + 1) % 8 || 2;
             }
-            const expectedVerifier = String(11 - (sum % 11));
+            const expectedVerifier = (11 - (sum % 11)).toString();
 
             if (expectedVerifier === '10' && verifier === 'K') {
+                console.log("El RUT " + rut + " es válido");
                 return true;
-            } else if (expectedVerifier === '11' && verifier === '0') {
-                return true;
+            } else if (expectedVerifier === '11') {
+                expectedVerifier = '0';
+                if (expectedVerifier === verifier) {
+                    console.log("El RUT " + rut + " es válido");
+                    return true;
+                }
             } else if (expectedVerifier === verifier) {
+                console.log("El RUT " + rut + " es válido");
                 return true;
-            } else {
-                return false;
             }
 
-
+            console.log("El RUT " + rut + " no es válido");
+            return false;
         }
+
+
+
+
+
 
 
         function validarNombreYApellido(na) {
@@ -430,16 +436,16 @@
             return true;
         }
 
-        function verificarDuplicados(rut) {
+        function verificarDuplicados() {
 
             var rut = $("#rut").val();
 
-            var rutNoVoto = true;
+            var cant = 0;
             $.ajax({
                 url: 'controller/manejarFlujo.php',
                 type: 'POST',
                 dataType: 'json',
-                async: true,
+                async: false,
                 data: {
                     Accion: 'verificarDuplicados',
                     rut: rut
@@ -448,21 +454,18 @@
                 beforeSend: function () {
                 },
                 success: function (data) {
-                    var cant = Number(data[0].cantidad);
+                    cant = Number(data[0].cantidad);
 
-                    if (cant === 0) {
-                        rutNoVoto = false;
-                        console.log('Primera vez votando');
-                    } else {
-                        console.log('Ya voto');
-                    }
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('error: ' + textStatus);
                 }
             });
 
-            return rutNoVoto;
+
+            console.log("la cantidad es " + cant);
+            return cant;
         }
 
 
