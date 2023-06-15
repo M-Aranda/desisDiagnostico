@@ -21,7 +21,6 @@ UNIQUE KEY(rut)
 
 
 
-
 CREATE table candidato (
 id INT auto_increment,
 nombre VARCHAR (250),
@@ -48,8 +47,6 @@ CREATE TABLE `comunas` (
 ) ENGINE=MyISAM AUTO_INCREMENT=346 DEFAULT CHARSET=utf8;
 
 
-
-SELECT * FROM voto;
 
 INSERT INTO `comunas` (`id`,`comuna`,`provincia_id`)
 VALUES
@@ -505,14 +502,13 @@ VALUES
     
     
     
+    
     /*
     query para obtener comunas de cierta region
     
     SELECT A.comuna FROM comunas A JOIN provincias B ON A.provincia_id=B.id 
 JOIN regiones C ON B.region_id=C.id
 WHERE C.id=1;
-
-SELECT * FROM voto;
     
     
     */

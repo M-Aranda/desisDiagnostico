@@ -178,6 +178,8 @@
                 console.log("rut ok");
             }
 
+
+
             if (!validarEmail(email)) {
                 var validezEmail = false;
                 console.log('email invalido');
@@ -195,8 +197,8 @@
 
 
             console.log("hay " + verificarDuplicados() + " coincidencias");
-//!validezRut ||
-            if (!validezNA || !validezAlias || !validezEmail || !validezCSEN || verificarDuplicados() === 1) {
+
+            if (!validezNA || !validezAlias || !validezRut || !validezEmail || !validezCSEN || verificarDuplicados() === 1) {
 
                 if (verificarDuplicados() === 1) {
                     alert("este rut ya voto");
@@ -204,7 +206,7 @@
                     alert("Asegurese de completar el formulario adecuadamente");
                 }
                 if (!validezRut) {
-                    alert("el rut no es valido");
+                    alert("el rut no es valido (con guion, sin puntos)");
                 }
 
 
@@ -350,47 +352,6 @@
         });
 
 
-        function validarRut(rut) {
-            rut = rut.replace(/[^\dKk]/g, '').toUpperCase();
-
-            if (!/^\d{1,2}\.\d{3}\.\d{3}[-][0-9Kk]{1}$/.test(rut)) {
-                console.log(rut + " está entrando aquí");
-                return false;
-            }
-
-            const digits = rut.slice(0, -2).replace(/\D/g, '');
-            const verifier = rut.slice(-1);
-
-            let sum = 0;
-            let multiplier = 2;
-            for (let i = digits.length - 1; i >= 0; i--) {
-                sum += parseInt(digits[i], 10) * multiplier;
-                multiplier = (multiplier + 1) % 8 || 2;
-            }
-            const expectedVerifier = (11 - (sum % 11)).toString();
-
-            if (expectedVerifier === '10' && verifier === 'K') {
-                console.log("El RUT " + rut + " es válido");
-                return true;
-            } else if (expectedVerifier === '11') {
-                expectedVerifier = '0';
-                if (expectedVerifier === verifier) {
-                    console.log("El RUT " + rut + " es válido");
-                    return true;
-                }
-            } else if (expectedVerifier === verifier) {
-                console.log("El RUT " + rut + " es válido");
-                return true;
-            }
-
-            console.log("El RUT " + rut + " no es válido");
-            return false;
-        }
-
-
-
-
-
 
 
         function validarNombreYApellido(na) {
@@ -467,6 +428,42 @@
             console.log("la cantidad es " + cant);
             return cant;
         }
+
+
+        function validarRut() {
+
+            var rut = $("#rut").val();
+
+            var valido = false;
+            $.ajax({
+                url: 'controller/manejarFlujo.php',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    Accion: 'validarRut',
+                    rut: rut
+
+                },
+                beforeSend: function () {
+                },
+                success: function (data) {
+
+
+                    if (!data['error']) {
+                        valido = true;
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('error: ' + textStatus);
+                }
+            });
+
+            return valido;
+        }
+
+
 
 
 

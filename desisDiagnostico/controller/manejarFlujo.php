@@ -38,6 +38,15 @@ if (isset($_POST)) {
         $rut = filter_input(INPUT_POST, "rut");
         verificarDuplicados($rut);
     }
+    
+        if ($accion == "validarRut") {
+        $rut = filter_input(INPUT_POST, "rut");
+        phpRule_ValidarRut($rut);
+    }
+    
+    
+    
+    
 }
 
 function registrar($nombreYApellido, $alias, $rut, $email, $region, $comuna, $candidato, $chkWeb, $chkTV, $chkRS, $chkAmigo) {
@@ -80,5 +89,18 @@ function verificarDuplicados($rut) {
     echo $json;
     $f = null;
 }
+
+function phpRule_ValidarRut($rut) {
+    $f = new Flujo();
+    $json = $f->phpRule_ValidarRut($rut);
+
+    echo $json;
+    $f = null;
+}
+
+
+
+
+
 
 ?>
